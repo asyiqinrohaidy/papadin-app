@@ -1,44 +1,59 @@
 // src/App.js
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "./firebase";
-
-// Import pages
 import Login from "./Login";
 import Register from "./Register";
-import AppOutlet from "./AppOutlet";
 import AdminDashboard from "./AdminDashboard";
+import OutletDashboard from "./OutletDashboard";
+import { auth, db } from "./firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 function App() {
+  const [currentPage, setCurrentPage] = useState("login");
   const [user, setUser] = useState(null);
-  const [role, setRole] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Check authentication state and role
   useEffect(() => {
-    const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      console.log("Auth state changed:", currentUser);
+      setUser(currentUser);
+      
       if (currentUser) {
-        setUser(currentUser);
-        
         // Get user role from Firestore
         try {
-          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-          if (userDoc.exists()) {
-            setRole(userDoc.data().role);
+          const docRef = doc(db, "users", currentUser.uid);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            const role = docSnap.data().role;
+            console.log("User role:", role);
+            setUserRole(role);
           } else {
-            // If no role found, default to outlet
-            setRole("outlet");
+            // If no Firestore document, check if it's admin email
+            if (currentUser.email === "admin@papadin.com") {
+              setUserRole("admin");
+            } else {
+              setUserRole("outlet");
+            }
           }
         } catch (error) {
-          console.error("Error fetching user role:", error);
-          setRole("outlet");
+          console.error("Error fetching role:", error);
+          // Fallback: check email
+          if (currentUser.email === "admin@papadin.com") {
+            setUserRole("admin");
+          } else {
+            setUserRole("outlet");
+          }
         }
+        
+        setCurrentPage("dashboard");
       } else {
-        setUser(null);
-        setRole(null);
+        setUserRole(null);
+        setCurrentPage("login");
       }
+      
       setLoading(false);
     });
 
@@ -46,81 +61,90 @@ function App() {
   }, []);
 
   const handleLogout = async () => {
-    const auth = getAuth();
-    await auth.signOut();
-    setUser(null);
-    setRole(null);
+    try {
+      await signOut(auth);
+      setUser(null);
+      setUserRole(null);
+      setCurrentPage("login");
+      alert("✅ Logged out successfully!");
+    } catch (error) {
+      console.error("Logout error:", error);
+      alert("❌ Logout failed: " + error.message);
+    }
   };
 
+  // Loading screen
   if (loading) {
     return (
-      <div style={loadingScreen}>
-        <h2>Loading Papadin System...</h2>
+      <div style={styles.loadingContainer}>
+        <div style={styles.spinner}></div>
+        <p style={styles.loadingText}>Loading...</p>
       </div>
     );
   }
 
+  // Not logged in - show Login or Register
+  if (!user) {
+    return (
+      <div className="App">
+        {currentPage === "login" && (
+          <Login setCurrentPage={setCurrentPage} />
+        )}
+        {currentPage === "register" && (
+          <Register setCurrentPage={setCurrentPage} />
+        )}
+      </div>
+    );
+  }
+
+  // Logged in - show dashboard based on role
   return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route 
-          path="/login" 
-          element={
-            user ? 
-            <Navigate to="/dashboard" /> : 
-            <Login setUser={setUser} setRole={setRole} />
-          } 
-        />
-        <Route 
-          path="/register" 
-          element={
-            user ? 
-            <Navigate to="/dashboard" /> : 
-            <Register />
-          } 
-        />
-
-        {/* Protected Dashboard Route */}
-        <Route 
-          path="/dashboard" 
-          element={
-            user ? (
-              role === "admin" ? (
-                <AdminDashboard user={user} handleLogout={handleLogout} />
-              ) : (
-                <AppOutlet user={user} handleLogout={handleLogout} />
-              )
-            ) : (
-              <Navigate to="/login" />
-            )
-          } 
-        />
-
-        {/* Default Route */}
-        <Route 
-          path="/" 
-          element={
-            user ? 
-            <Navigate to="/dashboard" /> : 
-            <Navigate to="/login" />
-          } 
-        />
-
-        {/* Catch all - redirect to login */}
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
+    <div className="App">
+      {userRole === "admin" ? (
+        <AdminDashboard user={user} handleLogout={handleLogout} />
+      ) : (
+        <OutletDashboard user={user} handleLogout={handleLogout} />
+      )}
+    </div>
   );
 }
 
-const loadingScreen = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100vh",
-  fontFamily: "Poppins, sans-serif",
-  background: "linear-gradient(135deg, #a5d6a7, #81c784)",
+/* ========== STYLES ========== */
+const styles = {
+  loadingContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    fontFamily: "'Poppins', sans-serif",
+  },
+  spinner: {
+    width: "50px",
+    height: "50px",
+    border: "5px solid rgba(255,255,255,0.3)",
+    borderTop: "5px solid white",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
+  },
+  loadingText: {
+    marginTop: "20px",
+    color: "white",
+    fontSize: "18px",
+    fontWeight: "500",
+  },
 };
 
+// Add spinner animation
+const styleSheet = document.createElement("style");
+styleSheet.textContent = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+document.head.appendChild(styleSheet);
+
 export default App;
+

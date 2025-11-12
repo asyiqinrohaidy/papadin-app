@@ -1,7 +1,7 @@
 // src/firebase.js
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyByfsmmNvGLgSCd8RTPy-fPNVo3Tt8N_Q4",
@@ -13,12 +13,11 @@ const firebaseConfig = {
   measurementId: "G-MXSPJPNX89"
 };
 
-// 💡 Elak reinitialize — guna getApps() untuk semak sama ada dah ada instance Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
-// 🔥 Export instance supaya boleh digunakan di seluruh app
-const db = getFirestore(app);
-const auth = getAuth(app);
+// Initialize services
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
-export { db, auth };
 export default app;
