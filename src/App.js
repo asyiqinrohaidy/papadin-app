@@ -17,39 +17,52 @@ function App() {
   // Check authentication state and role
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      console.log("Auth state changed:", currentUser);
-      setUser(currentUser);
+      console.log("════════════════════════════════════");
+      console.log("🔐 Auth State Changed");
+      console.log("User:", currentUser?.email);
       
       if (currentUser) {
-        // Get user role from Firestore
-        try {
-          const docRef = doc(db, "users", currentUser.uid);
-          const docSnap = await getDoc(docRef);
-          
-          if (docSnap.exists()) {
-            const role = docSnap.data().role;
-            console.log("User role:", role);
-            setUserRole(role);
-          } else {
-            // If no Firestore document, check if it's admin email
-            if (currentUser.email === "admin@papadin.com") {
-              setUserRole("admin");
+        setUser(currentUser);
+        
+        // IMPORTANT: Check admin FIRST by email
+        let role = "outlet"; // Default
+        
+        // Method 1: Hardcoded admin emails (MOST RELIABLE)
+        const adminEmails = [
+          "admin@papadin.com",
+          "admin@example.com"
+        ];
+        
+        if (adminEmails.includes(currentUser.email)) {
+          role = "admin";
+          console.log("✅ Admin detected by EMAIL:", currentUser.email);
+        } else {
+          // Method 2: Check Firestore for other users
+          try {
+            const docRef = doc(db, "users", currentUser.uid);
+            const docSnap = await getDoc(docRef);
+            
+            if (docSnap.exists()) {
+              const firestoreRole = docSnap.data().role;
+              role = firestoreRole || "outlet";
+              console.log("✅ Role from Firestore:", role);
             } else {
-              setUserRole("outlet");
+              console.log("⚠️ No Firestore document, using default: outlet");
             }
-          }
-        } catch (error) {
-          console.error("Error fetching role:", error);
-          // Fallback: check email
-          if (currentUser.email === "admin@papadin.com") {
-            setUserRole("admin");
-          } else {
-            setUserRole("outlet");
+          } catch (error) {
+            console.error("❌ Firestore error:", error);
           }
         }
         
+        console.log("🎭 FINAL ROLE:", role);
+        console.log("════════════════════════════════════");
+        
+        setUserRole(role);
         setCurrentPage("dashboard");
       } else {
+        console.log("❌ No user logged in");
+        console.log("════════════════════════════════════");
+        setUser(null);
         setUserRole(null);
         setCurrentPage("login");
       }
@@ -66,10 +79,9 @@ function App() {
       setUser(null);
       setUserRole(null);
       setCurrentPage("login");
-      alert("✅ Logged out successfully!");
+      console.log("✅ Logged out successfully");
     } catch (error) {
-      console.error("Logout error:", error);
-      alert("❌ Logout failed: " + error.message);
+      console.error("❌ Logout error:", error);
     }
   };
 
@@ -83,7 +95,7 @@ function App() {
     );
   }
 
-  // Not logged in - show Login or Register
+  // Not logged in
   if (!user) {
     return (
       <div className="App">
@@ -97,13 +109,24 @@ function App() {
     );
   }
 
-  // Logged in - show dashboard based on role
+  // Logged in - CRITICAL: Check role before rendering
+  console.log("🎯 About to render dashboard");
+  console.log("📧 User email:", user.email);
+  console.log("🎭 User role:", userRole);
+  console.log("🖥️ Will show:", userRole === "admin" ? "ADMIN Dashboard" : "OUTLET Dashboard");
+  
   return (
     <div className="App">
       {userRole === "admin" ? (
-        <AdminDashboard user={user} handleLogout={handleLogout} />
+        <>
+          {console.log("✅ Rendering ADMIN Dashboard")}
+          <AdminDashboard user={user} handleLogout={handleLogout} />
+        </>
       ) : (
-        <OutletDashboard user={user} handleLogout={handleLogout} />
+        <>
+          {console.log("✅ Rendering OUTLET Dashboard")}
+          <OutletDashboard user={user} handleLogout={handleLogout} />
+        </>
       )}
     </div>
   );
@@ -147,4 +170,3 @@ styleSheet.textContent = `
 document.head.appendChild(styleSheet);
 
 export default App;
-

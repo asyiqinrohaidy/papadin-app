@@ -20,6 +20,8 @@ function Login({ setCurrentPage }) {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      console.log("✅ Login successful for:", user.email);
+
       // 🔍 Check user role in Firestore (optional)
       try {
         const docRef = doc(db, "users", user.uid);
@@ -27,19 +29,14 @@ function Login({ setCurrentPage }) {
 
         if (docSnap.exists()) {
           const role = docSnap.data().role;
-          console.log("User role:", role);
-          // Store role if needed for later use
+          console.log("📋 User role from Firestore:", role);
           localStorage.setItem("userRole", role);
         }
       } catch (firestoreError) {
-        console.log("Firestore check skipped:", firestoreError);
-        // Continue anyway - Firestore is optional
+        console.log("⚠️ Firestore check skipped:", firestoreError);
       }
 
-      // ✅ Login successful - App.js will handle navigation automatically
-      alert("✅ Login berjaya! Selamat datang!");
-      
-      // No need to call setCurrentPage - onAuthStateChanged in App.js handles it
+      // ✅ NO ALERT - App.js will handle navigation automatically via onAuthStateChanged
       
     } catch (err) {
       console.error("❌ Login error:", err);
