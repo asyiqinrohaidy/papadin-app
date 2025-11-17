@@ -463,6 +463,30 @@ function OutletDashboard({ user, handleLogout }) {
           </div>
         </div>
       )}
+
+      {/* Footer - Professional Version */}
+      <footer style={styles.footer}>
+        <div style={styles.footerContent}>
+          <div style={styles.footerBrand}>
+            <div>
+              <h4 style={styles.footerTitle}>Papadin AI</h4>
+              <p style={styles.footerSubtitle}>Intelligent Chicken Wholesale Inventory Management</p>
+            </div>
+          </div>
+          
+          <div style={styles.footerDivider}></div>
+          
+          <div style={styles.footerInfo}>
+            <p style={styles.footerDeveloper}>
+              Developed by <strong>Asyiqin Rohaidy</strong>
+            </p>
+          </div>
+          
+          <p style={styles.footerCopyright}>
+            © 2025 Papadin AI • All Rights Reserved
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
@@ -537,6 +561,7 @@ const styles = {
     borderRadius: "12px",
     padding: "25px",
     boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+    marginBottom: "30px",
   },
   cardHeader: {
     display: "flex",
@@ -757,6 +782,67 @@ const styles = {
     borderRadius: "8px",
     cursor: "pointer",
     fontWeight: "600",
+  },
+  
+  // ========== FOOTER STYLES (Professional Version) ==========
+  footer: {
+    marginTop: "60px",
+    padding: "40px 30px",
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    borderRadius: "16px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+  },
+  footerContent: {
+    maxWidth: "1200px",
+    margin: "0 auto",
+    textAlign: "center",
+  },
+  footerBrand: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "15px",
+    marginBottom: "25px",
+  },
+  footerLogo: {
+    fontSize: "48px",
+  },
+  footerTitle: {
+    margin: "0",
+    fontSize: "24px",
+    color: "white",
+    fontWeight: "700",
+  },
+  footerSubtitle: {
+    margin: "5px 0 0 0",
+    fontSize: "13px",
+    color: "rgba(255,255,255,0.8)",
+  },
+  footerDivider: {
+    height: "1px",
+    background: "rgba(255,255,255,0.2)",
+    margin: "25px auto",
+    width: "60%",
+  },
+  footerInfo: {
+    textAlign: "center",
+    marginBottom: "25px",
+  },
+  footerDeveloper: {
+    margin: "0 0 8px 0",
+    fontSize: "16px",
+    color: "white",
+    fontWeight: "500",
+  },
+  footerCredentials: {
+    margin: "0",
+    fontSize: "14px",
+    color: "rgba(255,255,255,0.9)",
+  },
+  footerCopyright: {
+    margin: "0",
+    fontSize: "12px",
+    color: "rgba(255,255,255,0.6)",
   },
 };
 

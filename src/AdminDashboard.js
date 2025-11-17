@@ -134,6 +134,30 @@ function AdminDashboard({ user, handleLogout }) {
 
         {/* Content Area */}
         <div style={contentArea}>{renderContent()}</div>
+
+        {/* Footer - Professional Version */}
+        <footer style={footer}>
+          <div style={footerContent}>
+            <div style={footerBrand}>
+              <div>
+                <h4 style={footerTitle}>Papadin AI</h4>
+                <p style={footerSubtitle}>Intelligent Chicken Wholesale Inventory Management</p>
+              </div>
+            </div>
+            
+            <div style={footerDivider}></div>
+            
+            <div style={footerInfo}>
+              <p style={footerDeveloper}>
+                Developed by <strong>Asyiqin Rohaidy</strong>
+              </p>
+            </div>
+            
+            <p style={footerCopyright}>
+              © 2025 Papadin AI • All Rights Reserved
+            </p>
+          </div>
+        </footer>
       </main>
 
       {/* Floating AI Chat Button */}
@@ -791,6 +815,77 @@ const chatToggleBtn = {
   fontSize: "28px",
   cursor: "pointer",
   boxShadow: "0 6px 20px rgba(102, 126, 234, 0.4)",
+};
+
+// ========== FOOTER STYLES (Professional Version) ==========
+const footer = {
+  marginTop: "60px",
+  padding: "40px 30px",
+  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  borderRadius: "16px",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+};
+
+const footerContent = {
+  maxWidth: "1200px",
+  margin: "0 auto",
+  textAlign: "center",
+};
+
+const footerBrand = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "15px",
+  marginBottom: "25px",
+};
+
+const footerLogo = {
+  fontSize: "48px",
+};
+
+const footerTitle = {
+  margin: "0",
+  fontSize: "24px",
+  color: "white",
+  fontWeight: "700",
+};
+
+const footerSubtitle = {
+  margin: "5px 0 0 0",
+  fontSize: "13px",
+  color: "rgba(255,255,255,0.8)",
+};
+
+const footerDivider = {
+  height: "1px",
+  background: "rgba(255,255,255,0.2)",
+  margin: "25px auto",
+  width: "60%",
+};
+
+const footerInfo = {
+  textAlign: "center",
+  marginBottom: "25px",
+};
+
+const footerDeveloper = {
+  margin: "0 0 8px 0",
+  fontSize: "16px",
+  color: "white",
+  fontWeight: "500",
+};
+
+const footerCredentials = {
+  margin: "0",
+  fontSize: "14px",
+  color: "rgba(255,255,255,0.9)",
+};
+
+const footerCopyright = {
+  margin: "0",
+  fontSize: "12px",
+  color: "rgba(255,255,255,0.6)",
 };
 
 export default AdminDashboard;
