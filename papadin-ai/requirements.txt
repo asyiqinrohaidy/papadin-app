@@ -10,5 +10,4 @@ torch==2.1.0
 torchvision==0.16.0
 gunicorn==21.2.0
 pillow==10.1.0
-pytesseract==0.3.10
 opencv-python-headless==4.8.1.78

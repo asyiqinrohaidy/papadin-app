@@ -1,0 +1,17 @@
+notepad .dockerignore
+```
+
+**Copy this:**
+```
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+.git
+.gitignore
+*.log
+.DS_Store
