@@ -1,4 +1,4 @@
-# 🍗 Papadin AI - Restaurant Inventory Management System
+# 🍗 Papadin AI - Intelligent Chicken Wholesale Inventory System
 
 AI-powered inventory management with machine learning predictions, anomaly detection, and automated receipt scanning.
 
