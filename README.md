@@ -104,13 +104,13 @@ Deployed on Render.com with 3 microservices:
 - Backend: Node.js Web Service
 - AI/ML: Python Web Service
 
-## 👨‍💻 About the Developer
+## About the Developer
 
 **Asyiqin Rohaidy**  
 AI/ML Engineer | Full-Stack Developer  
 MSc Computer Science, University of Warwick, UK
 
-Built this project to demonstrate end-to-end ML system development - from data preprocessing and model training to production deployment. Combining academic knowledge from a top Russell Group university with practical software engineering to create scalable AI solutions for real-world problems.
+Built this project to demonstrate end-to-end ML system development, from data preprocessing and model training to production deployment. Combining academic knowledge from a top Russell Group university with practical software engineering to create scalable AI solutions for real-world problems.
 
 **Technical Expertise:**
 - 🤖 Machine Learning: scikit-learn, PyTorch, Random Forest, LSTM, Isolation Forest
@@ -126,4 +126,4 @@ Built this project to demonstrate end-to-end ML system development - from data p
 
 ---
 
-**Built with ❤️ for an Intelligent Chicken Wholesale Inventory System**
+**Built with ❤️ for my dad**
